@@ -6,8 +6,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-NFL_WEBHOOK = os.getenv("DISCORD_NFL_WEBHOOK_URL")
-SEAHAWKS_WEBHOOK = os.getenv("DISCORD_SEAHAWKS_WEBHOOK_URL")
+NFL_WEBHOOK = os.getenv("NFL_WEBHOOK")
+SEAHAWKS_WEBHOOK = os.getenv("SEAHAWKS_WEBHOOK")
 
 URL = "https://www.spotrac.com/nfl/transactions"
 HEADERS = {
