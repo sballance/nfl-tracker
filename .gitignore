@@ -1,0 +1,4 @@
+.idea
+.env
+.venv/
+seen_transactions.json
