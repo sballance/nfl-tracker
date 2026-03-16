@@ -1,7 +1,7 @@
 import requests
-import json
 import os
 from dotenv import load_dotenv
+from gist_storage import load_snapshot, save_snapshot
 
 load_dotenv()
 
@@ -19,19 +19,6 @@ def fetch_injuries():
     r.raise_for_status()
     players = r.json()
     return [p for p in players if p.get("team") != "FA"]
-
-
-def load_snapshot():
-    try:
-        with open(SNAPSHOT_FILE) as f:
-            return json.load(f)
-    except:
-        return {}
-
-
-def save_snapshot(snapshot):
-    with open(SNAPSHOT_FILE, "w") as f:
-        json.dump(snapshot, f)
 
 
 def send_alert(player, change_type, webhooks):
@@ -58,7 +45,10 @@ def send_alert(player, change_type, webhooks):
 
 def main():
     current_players = fetch_injuries()
-    snapshot = load_snapshot()
+    try:
+        snapshot = load_snapshot(SNAPSHOT_FILE)
+    except:
+        snapshot = {}
 
     new_snapshot = {}
 
@@ -81,7 +71,7 @@ def main():
             if player["injury"] != prev["injury"]:
                 send_alert(player, f"Injury Change: {prev['injury']} → {player['injury']}", webhooks)
 
-    save_snapshot(new_snapshot)
+    save_snapshot(SNAPSHOT_FILE, new_snapshot)
 
     if not current_players:
         requests.post(INJURIES_WEBHOOK, json={"content": "⚠️ Injury tracker returned no players — the API may be down."})

@@ -1,8 +1,8 @@
 import requests
 from bs4 import BeautifulSoup
-import json
 import os
 from dotenv import load_dotenv
+from gist_storage import load_snapshot, save_snapshot
 
 load_dotenv()
 
@@ -92,8 +92,7 @@ def main():
     transactions = fetch_transactions()
 
     try:
-        with open("seen_transactions.json") as f:
-            seen = json.load(f)
+        seen = load_snapshot("seen_transactions.json")
     except:
         seen = []
 
@@ -118,8 +117,7 @@ def main():
 
         new_seen.append(tx["id"])
 
-    with open("seen_transactions.json", "w") as f:
-        json.dump(new_seen, f)
+    save_snapshot("seen_transactions.json", new_seen)
 
 
 if __name__ == "__main__":
