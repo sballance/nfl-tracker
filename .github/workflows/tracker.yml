@@ -25,10 +25,14 @@ jobs:
         env:
           NFL_WEBHOOK: ${{ secrets.NFL_WEBHOOK }}
           SEAHAWKS_WEBHOOK: ${{ secrets.SEAHAWKS_WEBHOOK }}
+          GIST_TOKEN: ${{ secrets.GIST_TOKEN }}
+          GIST_ID: ${{ secrets.GIST_ID }}
         run: python transactions_tracker.py
 
       - name: Run injury tracker
         env:
           INJURIES_WEBHOOK: ${{ secrets.INJURIES_WEBHOOK }}
           SEAHAWKS_WEBHOOK: ${{ secrets.SEAHAWKS_WEBHOOK }}
+          GIST_TOKEN: ${{ secrets.GIST_TOKEN }}
+          GIST_ID: ${{ secrets.GIST_ID }}
         run: python injuries_tracker.py
