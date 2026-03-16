@@ -111,7 +111,7 @@ def main():
             continue  # stop scanning once we hit known transaction
 
         webhooks = [NFL_WEBHOOK]
-        if "Seahawks" in tx["description"]:
+        if "Seattle" in tx["description"]:
             webhooks.append(SEAHAWKS_WEBHOOK)
 
         send_alert(tx, webhooks)
