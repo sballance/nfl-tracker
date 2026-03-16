@@ -21,8 +21,14 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Run script
+      - name: Run transaction tracker
         env:
           NFL_WEBHOOK: ${{ secrets.NFL_WEBHOOK }}
           SEAHAWKS_WEBHOOK: ${{ secrets.SEAHAWKS_WEBHOOK }}
         run: python transactions_tracker.py
+
+      - name: Run injury tracker
+        env:
+          INJURIES_WEBHOOK: ${{ secrets.INJURIES_WEBHOOK }}
+          SEAHAWKS_WEBHOOK: ${{ secrets.SEAHAWKS_WEBHOOK }}
+        run: python injuries_tracker.py
