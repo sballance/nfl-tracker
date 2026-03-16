@@ -2,7 +2,7 @@ name: NFL Transactions Tracker
 
 on:
   schedule:
-    - cron: '*/5 * * * *'  # runs every 5 minutes
+    - cron: '0 * * * *'  # runs every hour
   workflow_dispatch:  # allows you to trigger it manually from GitHub
 
 jobs:
