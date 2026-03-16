@@ -5,7 +5,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-WEBHOOK = os.getenv("INJURIES_WEBHOOK")
+INJURIES_WEBHOOK = os.getenv("INJURIES_WEBHOOK")
+SEAHAWKS_WEBHOOK = os.getenv("SEAHAWKS_WEBHOOK")
 API_URL = "https://www.rotowire.com/football/tables/injury-report.php?team=ALL&pos=ALL"
 SNAPSHOT_FILE = "seen_injuries.json"
 
@@ -33,7 +34,7 @@ def save_snapshot(snapshot):
         json.dump(snapshot, f)
 
 
-def send_alert(player, change_type):
+def send_alert(player, change_type, webhooks):
     colors = {
         "new": 15158332,      # red
         "status": 16776960,   # yellow
@@ -51,7 +52,8 @@ def send_alert(player, change_type):
         ]
     }
 
-    requests.post(WEBHOOK, json={"embeds": [embed]})
+    for webhook in webhooks:
+        requests.post(webhook, json={"embeds": [embed]})
 
 
 def main():
@@ -67,19 +69,22 @@ def main():
             "status": player["status"]
         }
 
+        webhooks = [INJURIES_WEBHOOK]
+        if player["team"] == "SEA":
+            webhooks.append(SEAHAWKS_WEBHOOK)
         if pid not in snapshot:
-            send_alert(player, "New Injury Report")
+            send_alert(player, "New Injury Report", webhooks)
         else:
             prev = snapshot[pid]
             if player["status"] != prev["status"]:
-                send_alert(player, f"Status Change: {prev['status']} → {player['status']}")
+                send_alert(player, f"Status Change: {prev['status']} → {player['status']}", webhooks)
             if player["injury"] != prev["injury"]:
-                send_alert(player, f"Injury Change: {prev['injury']} → {player['injury']}")
+                send_alert(player, f"Injury Change: {prev['injury']} → {player['injury']}", webhooks)
 
     save_snapshot(new_snapshot)
 
     if not current_players:
-        requests.post(WEBHOOK, json={"content": "⚠️ Injury tracker returned no players — the API may be down."})
+        requests.post(INJURIES_WEBHOOK, json={"content": "⚠️ Injury tracker returned no players — the API may be down."})
 
 
 if __name__ == "__main__":

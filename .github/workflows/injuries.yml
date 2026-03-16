@@ -1,4 +1,4 @@
-name: NFL Transactions Tracker
+name: NFL Injuries Tracker
 
 on:
   schedule:
@@ -23,6 +23,6 @@ jobs:
 
       - name: Run script
         env:
-          NFL_WEBHOOK: ${{ secrets.NFL_WEBHOOK }}
+          INJURIES_WEBHOOK: ${{ secrets.INJURIES_WEBHOOK }}
           SEAHAWKS_WEBHOOK: ${{ secrets.SEAHAWKS_WEBHOOK }}
-        run: python transactions_tracker.py
+        run: python injuries_tracker.py
